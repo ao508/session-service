@@ -32,24 +32,18 @@
 
 package org.cbioportal.session_service.service.internal;
 
-import org.cbioportal.session_service.service.SessionService;
-import org.cbioportal.session_service.service.exception.*;
+import java.util.List;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import org.cbioportal.session_service.domain.Session;
 import org.cbioportal.session_service.domain.SessionRepository;
 import org.cbioportal.session_service.domain.SessionType;
-
-import com.mongodb.util.JSONParseException;
-import java.lang.IllegalArgumentException;
-import org.springframework.data.mongodb.UncategorizedMongoDbException;
-
-import javax.validation.ConstraintViolationException;
-import javax.validation.ConstraintViolation;
-
-import org.springframework.dao.DuplicateKeyException;
+import org.cbioportal.session_service.service.SessionService;
+import org.cbioportal.session_service.service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.mongodb.UncategorizedMongoDbException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author Manda Wilson 
@@ -76,8 +70,6 @@ public class SessionServiceImpl implements SessionService {
                 session.getChecksum());
         } catch (ConstraintViolationException e) {
             throw new SessionInvalidException(buildConstraintViolationExceptionMessage(e));
-        } catch (JSONParseException e) {
-            throw new SessionInvalidException(e.getMessage());
         }
         return session;
     }
@@ -118,8 +110,6 @@ public class SessionServiceImpl implements SessionService {
                 sessionRepository.saveSession(savedSession);
             } catch (ConstraintViolationException e) {
                 throw new SessionInvalidException(buildConstraintViolationExceptionMessage(e));
-            } catch (JSONParseException e) {
-                throw new SessionInvalidException(e.getMessage());
             }   
             return;
         }

@@ -32,52 +32,48 @@
 
 package org.cbioportal.session_service;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
-
 import java.net.URL;
-
-import org.junit.*;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.TestRestTemplate;
-import org.springframework.http.*;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.regex.Pattern;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import static org.hamcrest.Matchers.*;
+import org.junit.*;
+import static org.junit.Assert.assertThat;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.*;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * @author Manda Wilson 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = SessionService.class)
-@WebAppConfiguration
-// pick random port for testing
-@IntegrationTest({"server.port=0"})
+//@SpringApplicationConfiguration(classes = SessionService.class)
+@ContextConfiguration(classes = SessionServiceConfig.class)
+@SpringBootTest(classes = SessionService.class, webEnvironment=WebEnvironment.RANDOM_PORT)
 // use application-test.properties config file
 @ActiveProfiles("test")
 public class SessionServiceTest {
 
     // get randomly assigned port
-    @Value("${local.server.port}")
-    private int port;
+//    @Value("${local.server.port}")
+//    private int port;
 
     private URL base;
-    private RestTemplate template;
+    @Autowired
+    private TestRestTemplate template;
 
-    @Before
-    public void setUp() throws Exception {
-        this.base = new URL("http://localhost:" + port + "/api/sessions/");
-        template = new TestRestTemplate();
-    }
+//    @Before
+//    public void setUp() throws Exception {
+//        this.base = new URL("http://localhost:" + port + "/api/sessions/");
+//        template = new TestRestTemplate();
+//    }
 
     @After
     public void tearDown() throws Exception {

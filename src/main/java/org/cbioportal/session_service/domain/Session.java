@@ -32,16 +32,14 @@
 
 package org.cbioportal.session_service.domain;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.util.DigestUtils;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.mongodb.util.JSON; // save as JSON, not String of JSON
+import com.google.gson.Gson;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.springframework.data.annotation.Id;
+import org.springframework.util.DigestUtils; 
 
 /**
  * @author Manda Wilson 
@@ -59,6 +57,7 @@ public class Session {
     private String source;
     @NotNull
     private SessionType type;
+    private Gson gson = new Gson();
     
 
     @JsonView(Session.Views.IdOnly.class)
@@ -72,12 +71,12 @@ public class Session {
 
     public void setData(Object data) {
         if(data instanceof String) {
-            this.data = JSON.parse((String)data);
+            this.data = gson.toJson(data);
         } else {
             this.data = data; 
         }
         // JSON.serialize it so that formatting is the same if we test later
-        this.checksum = DigestUtils.md5DigestAsHex(JSON.serialize(this.data).getBytes());
+        this.checksum = DigestUtils.md5DigestAsHex(gson.toJson(data).getBytes());
     }
 
     @JsonView(Session.Views.Full.class)
